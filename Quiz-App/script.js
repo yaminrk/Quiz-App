@@ -8,7 +8,7 @@ let questions = [
   },
   {
     type: "trueOrFalse",
-    question: "Is the Earth flat?",
+    question: "The earth is flat",
     answer: "false",
     explanation: "The Earth is not flat. It is an oblate spheroid, meaning it is mostly spherical but slightly flattened at the poles and slightly wider at the equator."
   },
@@ -36,7 +36,7 @@ let questions = [
   let timerInterval;
   
   function displayStartScreen() {
-    let quizContainer = document.getElementById("quiz-container");
+    let quizContainer = document.getElementById("question-container");
     quizContainer.innerHTML = ""; 
   
     let title = document.createElement("h1");
@@ -63,18 +63,18 @@ let questions = [
     let minutes = Math.floor(timeDiff / 60);
     let seconds = Math.floor(timeDiff % 60);
   
-    let timerDiv = document.getElementById("timer");
+    displayTimer(minutes, seconds);
+  }
+  
+  function displayTimer(minutes, seconds) {
+    let timerDiv = document.getElementById("timer-container");
     timerDiv.textContent = "Time elapsed: " + minutes + "m " + seconds + "s";
   }
   
   function displayQuestion(question) {
-    let quizContainer = document.getElementById("quiz-container");
+    let quizContainer = document.getElementById("question-container");
     quizContainer.innerHTML = ""; 
-  
-    let timerDiv = document.createElement("div");
-    timerDiv.id = "timer";
-    quizContainer.appendChild(timerDiv);
-  
+
     let questionText = document.createElement("p");
     questionText.textContent = question.question;
     quizContainer.appendChild(questionText);
