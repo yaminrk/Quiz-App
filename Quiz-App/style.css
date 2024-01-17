@@ -12,7 +12,7 @@ body {
     box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
 }
 
-#timer {
+#timer-container {
     float: right;
     font-size: 18px;
     color: #007BFF;
