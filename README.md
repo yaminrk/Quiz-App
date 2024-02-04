@@ -2,11 +2,6 @@ This is a interactive quiz application built with JavaScript, HTML, and CSS. The
 
 #The JavaScript code is structured into several functions, each responsible for a specific part of the quiz:
 
-displayStartScreen: Displays the start screen with a “Start Quiz” button.
-startQuiz: Starts the quiz and the timer.
-updateTimer: Updates the timer every second.
-displayQuestion: Displays the current question and its options or input field.
-saveAnswer: Saves the user’s answer for the current question.
-nextQuestion and prevQuestion: Navigate to the next or previous question.
-displayResults: Displays the results of the quiz when all questions have been answered.
-The CSS code provides styles for the quiz container, timer, buttons, radio buttons, labels, lists, and result divs. It also includes media queries to adjust the font sizes for different screen widths.
+#The code has comments explaing it in through detail
+
+#My main focus on this project was to create a readable and clean code. 
