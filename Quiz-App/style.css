@@ -71,7 +71,7 @@ input[type="radio"] {
 
 label {
     display: inline-block;
-    width: 100px;
+    width: 70px;
     margin: 10px 0px;
     padding: 10px;
     background-color: #4b4b4b; /* Darker grey background for contrast */
@@ -113,11 +113,6 @@ label.selected {
 
 #options li:hover, #matches li:hover {
     background-color: #2b2b2b;
-}
-
-#timer {
-    font-size: 1.2em;
-    color: #007BFF;
 }
 
 #quiz-container div[id^="result-"] {

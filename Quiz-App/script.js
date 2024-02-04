@@ -1,3 +1,5 @@
+// An array of question objects. Each object represents a question, its options, the correct answer, and an explanation.
+
 let questions = [
   {
     type: "multipleChoice",
@@ -28,15 +30,17 @@ let questions = [
   }
 ];
 
-
+// Variables to keep track of the current question, the user's answers, and the start and end times of the quiz.
   
   let currentQuestionIndex = 0;
   let answers = [];
   let startTime, endTime;
   let timerInterval;
   
+  // A reference to the HTML element that will contain the quiz content.
   let contentContainer = document.getElementById("content-container");
 
+  // This function displays the start screen of the quiz.
 function displayStartScreen() {
     contentContainer.innerHTML = ""; 
 
@@ -44,6 +48,8 @@ function displayStartScreen() {
     title.textContent = "Welcome to the Quiz!";
     contentContainer.appendChild(title);
 
+
+  // Button for starting the Quiz
     let startButton = document.createElement("button");
     startButton.textContent = "Start Quiz";
     startButton.onclick = startQuiz;
@@ -54,6 +60,7 @@ function displayStartScreen() {
     timerContainer.style.display = "none";
 }
 
+// This function starts the quiz. It records the start time and sets up a timer to update every second.
 function startQuiz() {
   startTime = new Date();
   timerInterval = setInterval(updateTimer, 1000); 
@@ -70,7 +77,7 @@ function startQuiz() {
 }
 
 
-  
+  // This function updates the timer by calculating the difference between the current time and the start time.
   function updateTimer() {
     let currentTime = new Date();
     let timeDiff = currentTime - startTime; 
@@ -82,28 +89,36 @@ function startQuiz() {
     displayTimer(minutes, seconds);
   }
   
+  // This function displays the elapsed time in the format "Time elapsed: Xm Ys".
   function displayTimer(minutes, seconds) {
     let timerDiv = document.getElementById("timer-container");
     timerDiv.textContent = "Time elapsed: " + minutes + "m " + seconds + "s";
   }
   
+  // This function displays the current question.
   function displayQuestion(question) {
+     // Get the content container and clear its current content
     let contentContainer = document.getElementById("content-container");
     contentContainer.innerHTML = ""; 
 
+      // Create a paragraph element for the question text and add it to the container
     let questionText = document.createElement("p");
     questionText.textContent = question.question;
     contentContainer.appendChild(questionText);
   
+    // If the question type is multiple choice, create radio buttons for each option
     if (question.type === "multipleChoice") {
       for (let i = 0; i < question.options.length; i++) {
+        // Get the current option and its number
           let option = question.options[i];
           let optionNumber = i + 1;
   
+          // Create a radio button for this option
           let radioBtn = document.createElement("input");
           radioBtn.type = "radio";
           radioBtn.name = "answer";
           radioBtn.value = option;
+
           radioBtn.onchange = () => {
               let labels = document.querySelectorAll('label');
               labels.forEach((label) => {
@@ -115,12 +130,14 @@ function startQuiz() {
               saveAnswer(option);
           };
   
+          // Create a label for this radio button and add the radio button to it
           let label = document.createElement("label");
           label.textContent = optionNumber + ". " + option;
   
           // Append the radio button to the label
           label.appendChild(radioBtn);
   
+          // If this option was previously selected, check this radio button and highlight it
           if (answers[currentQuestionIndex] === option) {
               radioBtn.checked = true;
               label.classList.add('selected');
@@ -132,37 +149,52 @@ function startQuiz() {
       }
   }
   
+  // If the question type is true or false, create two buttons for True and False
    else if (question.type === "trueOrFalse") {
+     // Create a button for True and set its click event
         let trueBtn = document.createElement("button");
         trueBtn.textContent = "True";
+
+         // When clicked, change the background color of this button, reset the other button's color, and save the answer
         trueBtn.onclick = function() {
             this.style.backgroundColor = "#2b2b2b";
             falseBtn.style.backgroundColor = "#555";
             saveAnswer("true");
         };
     
+         // Create a button for False and set its click event
         let falseBtn = document.createElement("button");
         falseBtn.style.display = "block";
         falseBtn.textContent = "False";
         falseBtn.onclick = function() {
+          // When clicked, change the background color of this button, reset the other button's color, and save the answer
             this.style.backgroundColor = "#2b2b2b";
             trueBtn.style.backgroundColor = "#555";
             saveAnswer("false");
         };
 
+        // If True was previously selected, set the background color of the True button
+    // If False was previously selected, set the background color of the False button
         if (answers[currentQuestionIndex] === "true") {
           trueBtn.style.backgroundColor = "#2b2b2b";
       } else if (answers[currentQuestionIndex] === "false") {
           falseBtn.style.backgroundColor = "#2b2b2b";
       }
-    
+
+       // Add the True and False buttons to the content container
       contentContainer.appendChild(trueBtn);
       contentContainer.appendChild(document.createElement("br")); 
       contentContainer.appendChild(falseBtn);
-    } else if (question.type === "matching") {
+    }
+
+    // If the question type is matching, create a list for options and matches
+     else if (question.type === "matching") {
+
+      // Create an unordered list for options
       let optionsList = document.createElement("ul");
       optionsList.id = "options";
   
+       // For each option, create a list item, make it draggable, and add it to the options list
       for (let option of question.options) {
           let listItem = document.createElement("li");
           listItem.textContent = option;
@@ -173,6 +205,7 @@ function startQuiz() {
           optionsList.appendChild(listItem);
       }
 
+       // These functions handle the drag and drop events
       function dragStart(event) {
         event.dataTransfer.setData("text", event.target.textContent);
       }
@@ -180,16 +213,18 @@ function startQuiz() {
       function dragOver(event) {
         event.preventDefault();
       }
-      
+
       function drop(event) {
         event.preventDefault();
         let data = event.dataTransfer.getData("text");
         event.target.textContent = data;
       }
   
+      // Create an unordered list for matches
       let matchesList = document.createElement("ul");
       matchesList.id = "matches";
-  
+
+      // For each match, create a list item, make it accept drops, and add it to the matches list
       for (let match of question.matches) {
           let listItem = document.createElement("li");
           listItem.textContent = match;
@@ -207,6 +242,7 @@ function startQuiz() {
           matchesList.appendChild(listItem);
       }
   
+        // If there is a saved answer for this question, display it
       if (answers[currentQuestionIndex]) {
           let userAnswer = answers[currentQuestionIndex];
           for (let i = 0; i < userAnswer.length; i++) {
@@ -214,9 +250,13 @@ function startQuiz() {
           }
       }
   
+       // Add the options list and matches list to the content container
       contentContainer.appendChild(optionsList);
       contentContainer.appendChild(matchesList);
-  }else if (question.type === "textInput") {
+    }
+
+    // If the question type is text input, create a text input field
+  else if (question.type === "textInput") {
         let input = document.createElement("input");
         input.style.display = "block";
         input.type = "text";
@@ -231,6 +271,7 @@ function startQuiz() {
       }
     
   
+      // Create a Next button and add it to the content container
       let nextButton = document.createElement("button");
       nextButton.textContent = "Next";
       nextButton.style.backgroundColor = " #555"; 
@@ -238,6 +279,7 @@ function startQuiz() {
       nextButton.onclick = nextQuestion;
       contentContainer.appendChild(nextButton);
       
+      // If this is not the first question, create a Previous button and add it to the content container 
       if (currentQuestionIndex > 0) {
           let prevButton = document.createElement("button");
           prevButton.textContent = "Previous";
@@ -248,6 +290,7 @@ function startQuiz() {
       
   }
   
+  // This function saves the user's answer for the current question.
   function saveAnswer(answer) {
     let question = questions[currentQuestionIndex];
     if (question.type === "multipleChoice") {
@@ -260,6 +303,7 @@ function startQuiz() {
     answers[currentQuestionIndex] = answer;
   }
   
+  // This function displays the next question or the results if there are no more questions.
   function nextQuestion() {
     currentQuestionIndex++;
     if (currentQuestionIndex < questions.length) {
@@ -269,25 +313,33 @@ function startQuiz() {
     }
   }
   
+  // This function displays the previous question.
   function prevQuestion() {
     currentQuestionIndex--;
     displayQuestion(questions[currentQuestionIndex]);
   }
   
+  // This function displays the results of the quiz.
   function displayResults() {
+    // Stop the timer
     clearInterval(timerInterval); 
   
+     // Calculate the time difference
     endTime = new Date();
     let timeDiff = endTime - startTime; 
     timeDiff /= 1000; 
+
+    let timerContainer = document.getElementById("timer-container");
+    timerContainer.style.display = "none";
   
-    let contentContainer = document.getElementById("quiz-container");
+    let contentContainer = document.getElementById("content-container");
     contentContainer.innerHTML = "";
   
     let title = document.createElement("h1");
     title.textContent = "Quiz Results";
     contentContainer.appendChild(title);
   
+    // Calculate the score and display the results for each question
     let score = 0;
     for (let i = 0; i < questions.length; i++) {
       let question = questions[i];
@@ -334,10 +386,13 @@ function startQuiz() {
   
       contentContainer.appendChild(questionDiv);
     }
-  
+
+    // Display the score
+    //...
     let scoreText = document.createElement("p");
     scoreText.textContent = "You got " + score + " out of " + questions.length + " questions correct.";
     contentContainer.appendChild(scoreText);
   }
   
+  // Display the start screen
   displayStartScreen();
