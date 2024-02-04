@@ -1,7 +1,5 @@
 This is a interactive quiz application built with JavaScript, HTML, and CSS. The application presents a series of questions of different types to the user, collects their answers, and displays the results at the end.
 
-Check it out online - https://quiz-app-yamin09.netlify.app/
-
 #The JavaScript code is structured into several functions, each responsible for a specific part of the quiz:
 
 displayStartScreen: Displays the start screen with a “Start Quiz” button.
