@@ -8,13 +8,13 @@ let questions = [
   },
   {
     type: "trueOrFalse",
-    question: "The earth is flat",
+    question: "The earth is flat.",
     answer: "false",
     explanation: "The Earth is not flat. It is an oblate spheroid, meaning it is mostly spherical but slightly flattened at the poles and slightly wider at the equator."
   },
   {
     type: "matching",
-    question: "Match the country with its capital",
+    question: "Match the country with its capital.",
     options: ["France", "Germany", "Spain"],
     matches: ["Paris", "Berlin", "Madrid"],
     answer: ["Paris", "Berlin", "Madrid"],
@@ -35,25 +35,41 @@ let questions = [
   let startTime, endTime;
   let timerInterval;
   
-  function displayStartScreen() {
-    let quizContainer = document.getElementById("question-container");
-    quizContainer.innerHTML = ""; 
-  
+  let contentContainer = document.getElementById("content-container");
+
+function displayStartScreen() {
+    contentContainer.innerHTML = ""; 
+
     let title = document.createElement("h1");
     title.textContent = "Welcome to the Quiz!";
-    quizContainer.appendChild(title);
-  
+    contentContainer.appendChild(title);
+
     let startButton = document.createElement("button");
     startButton.textContent = "Start Quiz";
     startButton.onclick = startQuiz;
-    quizContainer.appendChild(startButton);
-  }
-  
-  function startQuiz() {
-    startTime = new Date();
-    timerInterval = setInterval(updateTimer, 1000); 
-    displayQuestion(questions[currentQuestionIndex]);
-  }
+    contentContainer.appendChild(startButton);
+
+    // Hide the timer container
+    let timerContainer = document.getElementById("timer-container");
+    timerContainer.style.display = "none";
+}
+
+function startQuiz() {
+  startTime = new Date();
+  timerInterval = setInterval(updateTimer, 1000); 
+
+  // Delay the display of the question by 1 second
+  setTimeout(function() {
+      displayQuestion(questions[currentQuestionIndex]);
+
+      let timerContainer = document.getElementById("timer-container");
+  timerContainer.style.display = "block";
+  }, 1000);
+
+
+}
+
+
   
   function updateTimer() {
     let currentTime = new Date();
@@ -72,39 +88,56 @@ let questions = [
   }
   
   function displayQuestion(question) {
-    let quizContainer = document.getElementById("question-container");
-    quizContainer.innerHTML = ""; 
+    let contentContainer = document.getElementById("content-container");
+    contentContainer.innerHTML = ""; 
 
     let questionText = document.createElement("p");
     questionText.textContent = question.question;
-    quizContainer.appendChild(questionText);
+    contentContainer.appendChild(questionText);
   
     if (question.type === "multipleChoice") {
-      for (let option of question.options) {
+      for (let i = 0; i < question.options.length; i++) {
+          let option = question.options[i];
+          let optionNumber = i + 1;
+  
           let radioBtn = document.createElement("input");
           radioBtn.type = "radio";
           radioBtn.name = "answer";
           radioBtn.value = option;
-          radioBtn.onchange = () => saveAnswer(option); 
+          radioBtn.onchange = () => {
+              let labels = document.querySelectorAll('label');
+              labels.forEach((label) => {
+                  label.classList.remove('selected');
+              });
+  
+              label.classList.add('selected');
+  
+              saveAnswer(option);
+          };
   
           let label = document.createElement("label");
-          label.textContent = option;
+          label.textContent = optionNumber + ". " + option;
+  
+          // Append the radio button to the label
+          label.appendChild(radioBtn);
   
           if (answers[currentQuestionIndex] === option) {
               radioBtn.checked = true;
+              label.classList.add('selected');
           }
   
-          quizContainer.appendChild(radioBtn);
-          quizContainer.appendChild(label);
-          quizContainer.appendChild(document.createElement("br")); 
+          // Append the label (which now contains the radio button) to the container
+          contentContainer.appendChild(label);
+          contentContainer.appendChild(document.createElement("br")); 
       }
   }
+  
    else if (question.type === "trueOrFalse") {
         let trueBtn = document.createElement("button");
         trueBtn.textContent = "True";
         trueBtn.onclick = function() {
-            this.style.backgroundColor = "#003d7a";
-            falseBtn.style.backgroundColor = "#007BFF";
+            this.style.backgroundColor = "#2b2b2b";
+            falseBtn.style.backgroundColor = "#555";
             saveAnswer("true");
         };
     
@@ -112,20 +145,20 @@ let questions = [
         falseBtn.style.display = "block";
         falseBtn.textContent = "False";
         falseBtn.onclick = function() {
-            this.style.backgroundColor = "#003d7a";
-            trueBtn.style.backgroundColor = "#007BFF";
+            this.style.backgroundColor = "#2b2b2b";
+            trueBtn.style.backgroundColor = "#555";
             saveAnswer("false");
         };
 
         if (answers[currentQuestionIndex] === "true") {
-          trueBtn.style.backgroundColor = "#003d7a";
+          trueBtn.style.backgroundColor = "#2b2b2b";
       } else if (answers[currentQuestionIndex] === "false") {
-          falseBtn.style.backgroundColor = "#003d7a";
+          falseBtn.style.backgroundColor = "#2b2b2b";
       }
     
-        quizContainer.appendChild(trueBtn);
-        quizContainer.appendChild(document.createElement("br")); 
-        quizContainer.appendChild(falseBtn);
+      contentContainer.appendChild(trueBtn);
+      contentContainer.appendChild(document.createElement("br")); 
+      contentContainer.appendChild(falseBtn);
     } else if (question.type === "matching") {
       let optionsList = document.createElement("ul");
       optionsList.id = "options";
@@ -181,8 +214,8 @@ let questions = [
           }
       }
   
-      quizContainer.appendChild(optionsList);
-      quizContainer.appendChild(matchesList);
+      contentContainer.appendChild(optionsList);
+      contentContainer.appendChild(matchesList);
   }else if (question.type === "textInput") {
         let input = document.createElement("input");
         input.style.display = "block";
@@ -194,23 +227,23 @@ let questions = [
           input.value = answers[currentQuestionIndex];
       }
     
-        quizContainer.appendChild(input);
+      contentContainer.appendChild(input);
       }
     
   
       let nextButton = document.createElement("button");
       nextButton.textContent = "Next";
-      nextButton.style.backgroundColor = "#28a745"; 
+      nextButton.style.backgroundColor = " #555"; 
       nextButton.style.marginRight = "10px"; 
       nextButton.onclick = nextQuestion;
-      quizContainer.appendChild(nextButton);
+      contentContainer.appendChild(nextButton);
       
       if (currentQuestionIndex > 0) {
           let prevButton = document.createElement("button");
           prevButton.textContent = "Previous";
-          prevButton.style.backgroundColor = "#ffc107"; 
+          prevButton.style.backgroundColor = "#555"; 
           prevButton.onclick = prevQuestion;
-          quizContainer.appendChild(prevButton);
+          contentContainer.appendChild(prevButton);
       }
       
   }
@@ -248,12 +281,12 @@ let questions = [
     let timeDiff = endTime - startTime; 
     timeDiff /= 1000; 
   
-    let quizContainer = document.getElementById("quiz-container");
-    quizContainer.innerHTML = "";
+    let contentContainer = document.getElementById("quiz-container");
+    contentContainer.innerHTML = "";
   
     let title = document.createElement("h1");
     title.textContent = "Quiz Results";
-    quizContainer.appendChild(title);
+    contentContainer.appendChild(title);
   
     let score = 0;
     for (let i = 0; i < questions.length; i++) {
@@ -299,12 +332,12 @@ let questions = [
         questionDiv.style.color = "red";
       }
   
-      quizContainer.appendChild(questionDiv);
+      contentContainer.appendChild(questionDiv);
     }
   
     let scoreText = document.createElement("p");
     scoreText.textContent = "You got " + score + " out of " + questions.length + " questions correct.";
-    quizContainer.appendChild(scoreText);
+    contentContainer.appendChild(scoreText);
   }
   
   displayStartScreen();
