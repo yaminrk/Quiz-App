@@ -2,6 +2,6 @@ This is a interactive quiz application built with JavaScript, HTML, and CSS. The
 
 #The JavaScript code is structured into several functions, each responsible for a specific part of the quiz:
 
-#The code has comments explaing it in through detail
+#The code has comments explaining it in through detail
 
 #My main focus on this project was to create a readable and clean code. 
